@@ -19,7 +19,8 @@ export const SPREADSHEET_ID = process.env.GOOGLE_SHEET_ID;
 export const COLS = {
     SUPPLIER_NAME: 1,    // B
     INVOICE_NUMBER: 3,   // D
-    AMOUNT: 5,           // F
+    AMOUNT: 5,           // F - Original invoice amount (never modified)
+    BALANCE: 6,          // G - Remaining balance (updated on payments)
     PAYMENT_STATUS: 8,   // I
     PAYMENT_DATE: 10,    // K
     PARTIAL_PAYMENT_1: 11, // L

@@ -45,10 +45,14 @@ export async function POST(req: Request) {
             row.push("");
         }
 
-        // Deduct from the main Amount cell so the Google Sheet reflects the remaining balance
-        const currentAmount = parseFloat(row[COLS.AMOUNT]?.replace(/[^0-9.-]+/g, "") || "0");
-        const newRemaining = Math.max(0, currentAmount - amountToPay);
-        row[COLS.AMOUNT] = newRemaining.toString();
+        // Read current balance from column G; fall back to column F for first-time payments
+        const currentBalance = parseFloat(
+            (row[COLS.BALANCE] || row[COLS.AMOUNT] || '0').toString().replace(/[^0-9.-]+/g, "")
+        );
+        const newRemaining = Math.max(0, currentBalance - amountToPay);
+
+        // Write new remaining balance to column G ONLY — column F (Amount) stays untouched
+        row[COLS.BALANCE] = newRemaining.toString();
 
         if (!isPartialMode) {
             // --- FULL PAYMENT LOGIC ---

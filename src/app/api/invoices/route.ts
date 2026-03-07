@@ -24,7 +24,9 @@ export async function GET() {
             const invoiceNumber = row[COLS.INVOICE_NUMBER];
             const status = row[COLS.PAYMENT_STATUS] || 'Open';
             const amountStr = row[COLS.AMOUNT] || '0';
-            const remaining = parseFloat(amountStr.replace(/[^0-9.-]+/g, ""));
+            const balanceStr = row[COLS.BALANCE] || row[COLS.AMOUNT] || '0'; // Fall back to Amount if Balance not yet set
+            const totalAmount = parseFloat(amountStr.replace(/[^0-9.-]+/g, ""));
+            const remaining = parseFloat(balanceStr.replace(/[^0-9.-]+/g, ""));
 
             // Only process valid rows
             if (!supplierName || !invoiceNumber) return;
@@ -35,40 +37,34 @@ export async function GET() {
                 invoices[supplierName] = [];
             }
 
-            // Calculate history out of custom columns
+            // Build payment history from partial payment columns
             const history = [];
-            let originalTotalAmount = remaining;
 
             if (row[COLS.PARTIAL_PAYMENT_1]) {
                 const amt = parseFloat(row[COLS.PARTIAL_PAYMENT_1]);
-                originalTotalAmount += amt;
                 history.push({ date: row[COLS.PARTIAL_PAYMENT_1_DATE] || 'Unknown', amount: amt });
             }
             if (row[COLS.PARTIAL_PAYMENT_2]) {
                 const amt = parseFloat(row[COLS.PARTIAL_PAYMENT_2]);
-                originalTotalAmount += amt;
                 history.push({ date: row[COLS.PARTIAL_PAYMENT_2_DATE] || 'Unknown', amount: amt });
             }
             if (row[COLS.PARTIAL_PAYMENT_3]) {
                 const amt = parseFloat(row[COLS.PARTIAL_PAYMENT_3]);
-                originalTotalAmount += amt;
                 history.push({ date: row[COLS.PARTIAL_PAYMENT_3_DATE] || 'Unknown', amount: amt });
             }
             if (row[COLS.PARTIAL_PAYMENT_4]) {
                 const amt = parseFloat(row[COLS.PARTIAL_PAYMENT_4]);
-                originalTotalAmount += amt;
                 history.push({ date: row[COLS.PARTIAL_PAYMENT_4_DATE] || 'Unknown', amount: amt });
             }
             if (row[COLS.PARTIAL_PAYMENT_5]) {
                 const amt = parseFloat(row[COLS.PARTIAL_PAYMENT_5]);
-                originalTotalAmount += amt;
                 history.push({ date: row[COLS.PARTIAL_PAYMENT_5_DATE] || 'Unknown', amount: amt });
             }
 
             invoices[supplierName].push({
                 id: invoiceNumber,
                 status: status,
-                totalAmount: originalTotalAmount,
+                totalAmount: totalAmount,
                 remaining: remaining > 0 ? remaining : 0,
                 history,
                 lastPaymentDate: row[COLS.PAYMENT_DATE] || null,
