@@ -21,6 +21,7 @@ export const COLS = {
     INVOICE_NUMBER: 3,   // D
     AMOUNT: 5,           // F - Original invoice amount (never modified)
     BALANCE: 6,          // G - Remaining balance (updated on payments)
+    PAYMENT_MODE: 9,     // J - Payment mode (PhonePe / Bank Transfer / Cash Payment)
     PAYMENT_STATUS: 8,   // I
     PAYMENT_DATE: 10,    // K
     PARTIAL_PAYMENT_1: 11, // L

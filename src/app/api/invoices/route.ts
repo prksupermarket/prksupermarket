@@ -61,13 +61,17 @@ export async function GET() {
                 history.push({ date: row[COLS.PARTIAL_PAYMENT_5_DATE] || 'Unknown', amount: amt });
             }
 
+            // Read existing payment modes (comma-separated for partials)
+            const existingModes = (row[COLS.PAYMENT_MODE] || '').split(',').map((m: string) => m.trim()).filter(Boolean);
+
             invoices[supplierName].push({
                 id: invoiceNumber,
                 status: status,
                 totalAmount: totalAmount,
                 remaining: remaining > 0 ? remaining : 0,
-                history,
+                history: history.map((h, i) => ({ ...h, paymentMode: existingModes[i] || '' })),
                 lastPaymentDate: row[COLS.PAYMENT_DATE] || null,
+                paymentMode: row[COLS.PAYMENT_MODE] || '',
                 rowIndex: index + 2 // +2 because array is 0-indexed and sheet starts at row 2
             });
         });

@@ -5,11 +5,15 @@ import { format } from 'date-fns';
 export async function POST(req: Request) {
     try {
         const body = await req.json();
-        const { supplier, invoiceId, rowIndex, amountRaw, isPartialMode } = body;
+        const { supplier, invoiceId, rowIndex, amountRaw, isPartialMode, paymentMode } = body;
 
+        const VALID_MODES = ['PhonePe', 'Bank Transfer', 'Cash Payment'];
         const amountToPay = parseFloat(amountRaw);
         if (!supplier || !invoiceId || !rowIndex || isNaN(amountToPay)) {
             return NextResponse.json({ error: "Missing required fields or invalid amount" }, { status: 400 });
+        }
+        if (!paymentMode || !VALID_MODES.includes(paymentMode)) {
+            return NextResponse.json({ error: "Invalid or missing payment mode" }, { status: 400 });
         }
 
         const sheets = await getGoogleSheets();
@@ -88,6 +92,10 @@ export async function POST(req: Request) {
                 }, { status: 400 });
             }
         }
+
+        // Update Payment Mode in Column J (comma-separated for partials)
+        const existingMode = (row[COLS.PAYMENT_MODE] || '').trim();
+        row[COLS.PAYMENT_MODE] = existingMode ? `${existingMode}, ${paymentMode}` : paymentMode;
 
         // 2. Write the updated row back to Google Sheets
         await sheets.spreadsheets.values.update({

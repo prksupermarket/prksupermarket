@@ -8,8 +8,9 @@ type Invoice = {
     status: string;
     totalAmount: number;
     remaining: number;
-    history: { date: string; amount: number }[];
+    history: { date: string; amount: number; paymentMode?: string }[];
     lastPaymentDate: string | null;
+    paymentMode?: string;
     rowIndex: number;
 };
 
@@ -29,6 +30,8 @@ export default function Home() {
     const [isLoading, setIsLoading] = useState(false);
     const [partialAmount, setPartialAmount] = useState<string>("");
     const [isPartial, setIsPartial] = useState(false);
+    const [activeAction, setActiveAction] = useState<"FULL" | "PARTIAL" | null>(null);
+    const [paymentMode, setPaymentMode] = useState<string>("");
     const [errorMessage, setErrorMessage] = useState("");
 
     useEffect(() => {
@@ -82,6 +85,8 @@ export default function Home() {
 
         setSelectedRowIndex(rIndex);
         setInvoiceId(inv.id);
+        setActiveAction(null);
+        setPaymentMode("");
         setErrorMessage("");
 
         // 1. First-Come-First-Served Duplicate Check
@@ -124,14 +129,16 @@ export default function Home() {
         setErrorMessage("");
     };
 
-    const handlePayment = async () => {
+    const handlePayment = async (selectedMode: string, isPartialMode: boolean) => {
         if (!selectedInvoice) return;
 
-        if (isPartial && (!partialAmount || Number(partialAmount) <= 0 || Number(partialAmount) > selectedInvoice.remaining)) {
+        if (isPartialMode && (!partialAmount || Number(partialAmount) <= 0 || Number(partialAmount) > selectedInvoice.remaining)) {
             setErrorMessage(`Please enter a valid partial amount. Maximum is ₹${selectedInvoice.remaining}`);
             return;
         }
 
+        setIsPartial(isPartialMode);
+        setPaymentMode(selectedMode);
         setIsLoading(true);
         setErrorMessage("");
 
@@ -143,8 +150,9 @@ export default function Home() {
                     supplier,
                     invoiceId,
                     rowIndex: selectedInvoice.rowIndex,
-                    amountRaw: isPartial ? partialAmount : selectedInvoice.remaining,
-                    isPartialMode: isPartial
+                    amountRaw: isPartialMode ? partialAmount : selectedInvoice.remaining,
+                    isPartialMode: isPartialMode,
+                    paymentMode: selectedMode
                 })
             });
 
@@ -179,6 +187,8 @@ export default function Home() {
         setSelectedRowIndex(null);
         setPartialAmount("");
         setIsPartial(false);
+        setActiveAction(null);
+        setPaymentMode("");
         setIsLoading(false);
         setErrorMessage("");
         setCurrentTime(null);
@@ -279,7 +289,7 @@ export default function Home() {
                                         <div className="space-y-1">
                                             {selectedInvoice.history.map((h, i) => (
                                                 <div key={i} className="text-lg text-slate-600 font-medium">
-                                                    Partial Payment {i + 1} - ₹{h.amount.toLocaleString('en-IN')} paid on {h.date}
+                                                    Partial Payment {i + 1} - ₹{h.amount.toLocaleString('en-IN')} paid on {h.date} {h.paymentMode ? `(via ${h.paymentMode})` : ''}
                                                 </div>
                                             ))}
                                         </div>
@@ -287,46 +297,73 @@ export default function Home() {
 
                                     {/* Inline Payment Controls - Highlighted */}
                                     <div className="pt-6 mt-4 border-t-2 border-slate-200 space-y-4 bg-slate-50/50 -mx-6 px-6 pb-6 rounded-b-[24px]">
-                                        {!isPartial ? (
-                                            <div className="grid grid-cols-2 gap-4">
+                                        <div className="grid grid-cols-2 gap-4 items-start">
+                                            {/* FULL PAYMENT COLUMN */}
+                                            <div className="flex flex-col gap-3">
                                                 <button
-                                                    onClick={handlePayment}
+                                                    onClick={() => { setActiveAction(activeAction === "FULL" ? null : "FULL"); setErrorMessage(""); }}
                                                     disabled={isLoading}
-                                                    className="bg-green-600 hover:bg-green-700 text-white py-5 px-4 rounded-2xl text-2xl font-black shadow-lg active:scale-95 disabled:opacity-50 transition-all flex items-center justify-center gap-2"
+                                                    className={`hover:bg-green-700 text-white py-5 px-4 rounded-2xl text-2xl font-black shadow-lg active:scale-95 disabled:opacity-50 transition-all flex items-center justify-center gap-2 ${activeAction === "FULL" ? "bg-green-700 ring-4 ring-green-200" : "bg-green-600"}`}
                                                 >
-                                                    {isLoading ? "..." : "Pay Full"}
+                                                    Pay Full
                                                 </button>
+
+                                                {activeAction === "FULL" && (
+                                                    <div className="p-4 bg-white border-2 border-green-500 rounded-2xl space-y-3 animate-in slide-in-from-top-2 shadow-xl">
+                                                        <p className="text-sm font-bold text-slate-500 text-center uppercase tracking-wider">Select Mode to Confirm</p>
+                                                        {['PhonePe', 'Bank Transfer', 'Cash Payment'].map(m => (
+                                                            <button
+                                                                key={m}
+                                                                onClick={() => handlePayment(m, false)}
+                                                                disabled={isLoading}
+                                                                className="w-full p-3 bg-slate-50 hover:bg-green-50 rounded-xl text-xl font-bold text-slate-700 hover:text-green-700 transition border-2 border-slate-200 hover:border-green-400 text-center"
+                                                            >
+                                                                {m}
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                            </div>
+
+                                            {/* PARTIAL PAYMENT COLUMN */}
+                                            <div className="flex flex-col gap-3">
                                                 <button
-                                                    onClick={() => setIsPartial(true)}
+                                                    onClick={() => { setActiveAction(activeAction === "PARTIAL" ? null : "PARTIAL"); setErrorMessage(""); }}
                                                     disabled={isLoading}
-                                                    className="bg-yellow-500 hover:bg-yellow-600 text-white py-5 px-4 rounded-2xl text-2xl font-black shadow-lg active:scale-95 disabled:opacity-50 transition-all flex items-center justify-center gap-2"
+                                                    className={`hover:bg-yellow-600 text-white py-5 px-4 rounded-2xl text-2xl font-black shadow-lg active:scale-95 disabled:opacity-50 transition-all flex items-center justify-center gap-2 ${activeAction === "PARTIAL" ? "bg-yellow-600 ring-4 ring-yellow-200" : "bg-yellow-500"}`}
                                                 >
                                                     Partial
                                                 </button>
+
+                                                {activeAction === "PARTIAL" && (
+                                                    <div className="p-4 bg-white border-2 border-yellow-500 rounded-2xl space-y-4 animate-in slide-in-from-top-2 shadow-xl">
+                                                        <div className="relative">
+                                                            <IndianRupee className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={24} />
+                                                            <input
+                                                                type="number"
+                                                                value={partialAmount}
+                                                                onChange={(e) => setPartialAmount(e.target.value)}
+                                                                placeholder="Amount"
+                                                                className="w-full p-4 pl-12 text-2xl font-black bg-slate-50 border-2 border-slate-200 rounded-xl outline-none focus:border-yellow-500 transition-all"
+                                                            />
+                                                        </div>
+                                                        <div className="space-y-3 pt-3 border-t-2 border-slate-100">
+                                                            <p className="text-sm font-bold text-slate-500 text-center uppercase tracking-wider">Select Mode to Confirm</p>
+                                                            {['PhonePe', 'Bank Transfer', 'Cash Payment'].map(m => (
+                                                                <button
+                                                                    key={m}
+                                                                    disabled={!partialAmount || isLoading || Number(partialAmount) <= 0 || Number(partialAmount) > selectedInvoice.remaining}
+                                                                    onClick={() => handlePayment(m, true)}
+                                                                    className="w-full p-3 bg-slate-50 hover:bg-yellow-50 disabled:opacity-50 disabled:hover:bg-slate-50 disabled:hover:border-slate-200 disabled:hover:text-slate-700 rounded-xl text-xl font-bold text-slate-700 hover:text-yellow-700 transition border-2 border-slate-200 hover:border-yellow-400 text-center"
+                                                                >
+                                                                    {m}
+                                                                </button>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                )}
                                             </div>
-                                        ) : (
-                                            <div className="space-y-4 animate-in zoom-in-95 duration-200 bg-white p-6 rounded-2xl shadow-inner border-2 border-yellow-400">
-                                                <h4 className="text-xl font-bold text-yellow-800">Enter Partial Amount</h4>
-                                                <div className="relative">
-                                                    <IndianRupee className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={28} />
-                                                    <input
-                                                        type="number"
-                                                        value={partialAmount}
-                                                        onChange={(e) => setPartialAmount(e.target.value)}
-                                                        placeholder="0.00"
-                                                        className="w-full p-5 pl-14 text-3xl font-black bg-slate-50 border-2 border-slate-200 rounded-2xl focus:border-yellow-500 focus:outline-none transition-all"
-                                                    />
-                                                </div>
-                                                <div className="flex gap-3">
-                                                    <button onClick={handlePayment} disabled={!partialAmount || isLoading} className="flex-[3] bg-yellow-600 hover:bg-yellow-700 text-white p-5 rounded-2xl text-2xl font-bold shadow-md active:scale-95 transition-all">
-                                                        {isLoading ? "Processing..." : "Confirm Payment"}
-                                                    </button>
-                                                    <button onClick={() => { setIsPartial(false); setErrorMessage(""); }} className="flex-1 bg-slate-100 text-slate-500 p-5 rounded-2xl font-black text-xl hover:bg-slate-200 transition-all">
-                                                        Cancel
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        )}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -344,6 +381,11 @@ export default function Home() {
                     <p className="text-3xl font-medium">
                         {isPartial ? "Partial Payment Recorded" : "Fully Paid!"}
                     </p>
+                    {paymentMode && (
+                        <p className="text-2xl font-bold bg-white/20 px-6 py-2 rounded-full inline-block mt-4">
+                            Paid via {paymentMode}
+                        </p>
+                    )}
                     <div className="bg-green-600 rounded-2xl p-6 w-full text-left space-y-2 mt-8">
                         {currentTime && (
                             <div className="border-b border-green-500 pb-4 mb-4">
@@ -368,7 +410,7 @@ export default function Home() {
                                     <div className="mt-4 border-t border-green-500 pt-4">
                                         <p className="text-lg font-bold mb-2">Previous Payments History:</p>
                                         {selectedInvoice.history.map((h, i) => (
-                                            <p key={i} className="text-lg text-green-100 mb-1">Paid ₹{h.amount.toLocaleString('en-IN')} on {h.date}</p>
+                                            <p key={i} className="text-lg text-green-100 mb-1">Paid ₹{h.amount.toLocaleString('en-IN')} on {h.date} {h.paymentMode ? `(via ${h.paymentMode})` : ''}</p>
                                         ))}
                                     </div>
                                 )}
