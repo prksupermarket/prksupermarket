@@ -354,12 +354,10 @@ export default function Home() {
                                                             />
                                                         </div>
                                                         <div className="space-y-2 pt-2 border-t-2 border-slate-100">
-                                                            {partialAmount && Number(partialAmount) > 0 && (
+                                                            {partialAmount && Number(partialAmount) >= 100000 && (
                                                                 <div className="text-center pb-1">
                                                                     <span className="text-sm font-black text-yellow-800 bg-yellow-100 px-3 py-1 rounded-full">
-                                                                        {Number(partialAmount) >= 100000
-                                                                            ? `Paying - ${parseFloat((Number(partialAmount) / 100000).toFixed(2))} Lakh Rupees`
-                                                                            : `Paying - ₹${Number(partialAmount).toLocaleString('en-IN')}`}
+                                                                        Paying - {parseFloat((Number(partialAmount) / 100000).toFixed(2))} Lakh Rupees
                                                                     </span>
                                                                 </div>
                                                             )}
