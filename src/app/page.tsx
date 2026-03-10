@@ -299,24 +299,24 @@ export default function Home() {
                                     <div className="pt-6 mt-4 border-t-2 border-slate-200 space-y-4 bg-slate-50/50 -mx-6 px-6 pb-6 rounded-b-[24px]">
                                         <div className="grid grid-cols-2 gap-4 items-start">
                                             {/* FULL PAYMENT COLUMN */}
-                                            <div className="flex flex-col gap-3">
+                                            <div className="flex flex-col">
                                                 <button
                                                     onClick={() => { setActiveAction(activeAction === "FULL" ? null : "FULL"); setErrorMessage(""); }}
                                                     disabled={isLoading}
-                                                    className={`hover:bg-green-700 text-white py-5 px-4 rounded-2xl text-2xl font-black shadow-lg active:scale-95 disabled:opacity-50 transition-all flex items-center justify-center gap-2 ${activeAction === "FULL" ? "bg-green-700 ring-4 ring-green-200" : "bg-green-600"}`}
+                                                    className={`hover:bg-green-700 text-white py-5 px-4 text-2xl font-black shadow-lg active:scale-95 disabled:opacity-50 transition-all flex items-center justify-center gap-2 z-10 relative ${activeAction === "FULL" ? "bg-green-700 rounded-t-2xl" : "bg-green-600 rounded-2xl"}`}
                                                 >
                                                     Pay Full
                                                 </button>
 
                                                 {activeAction === "FULL" && (
-                                                    <div className="p-4 bg-white border-2 border-green-500 rounded-2xl space-y-3 animate-in slide-in-from-top-2 shadow-xl">
+                                                    <div className="p-4 bg-white border-x-2 border-b-2 border-green-700 rounded-b-2xl space-y-3 animate-in slide-in-from-top-2 shadow-xl -mt-1 pt-5">
                                                         <p className="text-sm font-bold text-slate-500 text-center uppercase tracking-wider">Select Mode to Confirm</p>
                                                         {['PhonePe', 'Bank Transfer', 'Cash Payment'].map(m => (
                                                             <button
                                                                 key={m}
                                                                 onClick={() => handlePayment(m, false)}
                                                                 disabled={isLoading}
-                                                                className="w-full p-3 bg-slate-50 hover:bg-green-50 rounded-xl text-xl font-bold text-slate-700 hover:text-green-700 transition border-2 border-slate-200 hover:border-green-400 text-center"
+                                                                className="w-full p-3 bg-slate-50 hover:bg-green-50 rounded-xl text-xl font-bold text-slate-700 hover:text-green-700 transition border-2 border-slate-200 hover:border-green-400 text-center shadow-sm"
                                                             >
                                                                 {m}
                                                             </button>
@@ -326,25 +326,25 @@ export default function Home() {
                                             </div>
 
                                             {/* PARTIAL PAYMENT COLUMN */}
-                                            <div className="flex flex-col gap-3">
+                                            <div className="flex flex-col">
                                                 <button
                                                     onClick={() => { setActiveAction(activeAction === "PARTIAL" ? null : "PARTIAL"); setErrorMessage(""); }}
                                                     disabled={isLoading}
-                                                    className={`hover:bg-yellow-600 text-white py-5 px-4 rounded-2xl text-2xl font-black shadow-lg active:scale-95 disabled:opacity-50 transition-all flex items-center justify-center gap-2 ${activeAction === "PARTIAL" ? "bg-yellow-600 ring-4 ring-yellow-200" : "bg-yellow-500"}`}
+                                                    className={`hover:bg-yellow-600 text-white py-5 px-4 text-2xl font-black shadow-lg active:scale-95 disabled:opacity-50 transition-all flex items-center justify-center gap-2 z-10 relative ${activeAction === "PARTIAL" ? "bg-yellow-600 rounded-t-2xl" : "bg-yellow-500 rounded-2xl"}`}
                                                 >
                                                     Partial
                                                 </button>
 
                                                 {activeAction === "PARTIAL" && (
-                                                    <div className="p-4 bg-white border-2 border-yellow-500 rounded-2xl space-y-4 animate-in slide-in-from-top-2 shadow-xl">
+                                                    <div className="p-4 bg-white border-x-2 border-b-2 border-yellow-600 rounded-b-2xl space-y-4 animate-in slide-in-from-top-2 shadow-xl -mt-1 pt-5">
                                                         <div className="relative">
-                                                            <IndianRupee className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={24} />
+                                                            <IndianRupee className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
                                                             <input
                                                                 type="number"
                                                                 value={partialAmount}
                                                                 onChange={(e) => setPartialAmount(e.target.value)}
                                                                 placeholder="Amount"
-                                                                className="w-full p-4 pl-12 text-2xl font-black bg-slate-50 border-2 border-slate-200 rounded-xl outline-none focus:border-yellow-500 transition-all"
+                                                                className="w-full p-3 pl-10 pr-2 text-xl font-black bg-slate-50 border-2 border-slate-200 rounded-xl outline-none focus:border-yellow-500 transition-all"
                                                             />
                                                         </div>
                                                         <div className="space-y-3 pt-3 border-t-2 border-slate-100">
@@ -354,7 +354,7 @@ export default function Home() {
                                                                     key={m}
                                                                     disabled={!partialAmount || isLoading || Number(partialAmount) <= 0 || Number(partialAmount) > selectedInvoice.remaining}
                                                                     onClick={() => handlePayment(m, true)}
-                                                                    className="w-full p-3 bg-slate-50 hover:bg-yellow-50 disabled:opacity-50 disabled:hover:bg-slate-50 disabled:hover:border-slate-200 disabled:hover:text-slate-700 rounded-xl text-xl font-bold text-slate-700 hover:text-yellow-700 transition border-2 border-slate-200 hover:border-yellow-400 text-center"
+                                                                    className="w-full p-3 bg-slate-50 hover:bg-yellow-50 disabled:opacity-50 disabled:hover:bg-slate-50 disabled:hover:border-slate-200 disabled:hover:text-slate-700 rounded-xl text-xl font-bold text-slate-700 hover:text-yellow-700 transition border-2 border-slate-200 hover:border-yellow-400 text-center shadow-sm"
                                                                 >
                                                                     {m}
                                                                 </button>
