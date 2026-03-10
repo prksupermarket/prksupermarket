@@ -309,16 +309,22 @@ export default function Home() {
                                                 </button>
 
                                                 {activeAction === "FULL" && (
-                                                    <div className="p-4 bg-white border-x-2 border-b-2 border-green-700 rounded-b-2xl space-y-3 animate-in slide-in-from-top-2 shadow-xl -mt-1 pt-5">
-                                                        <p className="text-sm font-bold text-slate-500 text-center uppercase tracking-wider">Select Mode to Confirm</p>
-                                                        {['PhonePe', 'Bank Transfer', 'Cash Payment'].map(m => (
+                                                    <div className="p-3 bg-white border-x-2 border-b-2 border-green-700 rounded-b-2xl space-y-2 animate-in slide-in-from-top-2 shadow-xl -mt-1 pt-4">
+                                                        <div className="text-center pb-1">
+                                                            <span className="text-sm font-black text-green-800 bg-green-100 px-3 py-1 rounded-full">
+                                                                Paying - ₹{selectedInvoice.remaining.toLocaleString('en-IN')}
+                                                            </span>
+                                                        </div>
+                                                        {[{ id: 'PhonePe', bg: 'bg-[#5f259f] hover:bg-[#4a1c7d] text-white' },
+                                                        { id: 'Bank Transfer', bg: 'bg-blue-600 hover:bg-blue-700 text-white' },
+                                                        { id: 'Cash Payment', bg: 'bg-emerald-600 hover:bg-emerald-700 text-white' }].map(m => (
                                                             <button
-                                                                key={m}
-                                                                onClick={() => handlePayment(m, false)}
+                                                                key={m.id}
+                                                                onClick={() => handlePayment(m.id, false)}
                                                                 disabled={isLoading}
-                                                                className="w-full p-3 bg-slate-50 hover:bg-green-50 rounded-xl text-xl font-bold text-slate-700 hover:text-green-700 transition border-2 border-slate-200 hover:border-green-400 text-center shadow-sm"
+                                                                className={`w-full p-3 rounded-xl text-lg font-bold transition shadow-sm border-b-4 border-black/20 active:border-b-0 active:translate-y-1 ${m.bg}`}
                                                             >
-                                                                {m}
+                                                                {m.id}
                                                             </button>
                                                         ))}
                                                     </div>
@@ -336,27 +342,37 @@ export default function Home() {
                                                 </button>
 
                                                 {activeAction === "PARTIAL" && (
-                                                    <div className="p-4 bg-white border-x-2 border-b-2 border-yellow-600 rounded-b-2xl space-y-4 animate-in slide-in-from-top-2 shadow-xl -mt-1 pt-5">
+                                                    <div className="p-3 bg-white border-x-2 border-b-2 border-yellow-600 rounded-b-2xl space-y-3 animate-in slide-in-from-top-2 shadow-xl -mt-1 pt-4">
                                                         <div className="relative">
-                                                            <IndianRupee className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
+                                                            <IndianRupee className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
                                                             <input
                                                                 type="number"
                                                                 value={partialAmount}
                                                                 onChange={(e) => setPartialAmount(e.target.value)}
                                                                 placeholder="Amount"
-                                                                className="w-full p-3 pl-10 pr-2 text-xl font-black bg-slate-50 border-2 border-slate-200 rounded-xl outline-none focus:border-yellow-500 transition-all"
+                                                                className="w-full py-2 pl-8 pr-2 text-lg font-black bg-slate-50 border-2 border-slate-200 rounded-xl outline-none focus:border-yellow-500 transition-all"
                                                             />
                                                         </div>
-                                                        <div className="space-y-3 pt-3 border-t-2 border-slate-100">
-                                                            <p className="text-sm font-bold text-slate-500 text-center uppercase tracking-wider">Select Mode to Confirm</p>
-                                                            {['PhonePe', 'Bank Transfer', 'Cash Payment'].map(m => (
+                                                        <div className="space-y-2 pt-2 border-t-2 border-slate-100">
+                                                            {partialAmount && Number(partialAmount) > 0 && (
+                                                                <div className="text-center pb-1">
+                                                                    <span className="text-sm font-black text-yellow-800 bg-yellow-100 px-3 py-1 rounded-full">
+                                                                        {Number(partialAmount) >= 100000
+                                                                            ? `Paying - ${parseFloat((Number(partialAmount) / 100000).toFixed(2))} Lakh Rupees`
+                                                                            : `Paying - ₹${Number(partialAmount).toLocaleString('en-IN')}`}
+                                                                    </span>
+                                                                </div>
+                                                            )}
+                                                            {[{ id: 'PhonePe', bg: 'bg-[#5f259f] hover:bg-[#4a1c7d] text-white disabled:opacity-50' },
+                                                            { id: 'Bank Transfer', bg: 'bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-50' },
+                                                            { id: 'Cash Payment', bg: 'bg-emerald-600 hover:bg-emerald-700 text-white disabled:opacity-50' }].map(m => (
                                                                 <button
-                                                                    key={m}
+                                                                    key={m.id}
                                                                     disabled={!partialAmount || isLoading || Number(partialAmount) <= 0 || Number(partialAmount) > selectedInvoice.remaining}
-                                                                    onClick={() => handlePayment(m, true)}
-                                                                    className="w-full p-3 bg-slate-50 hover:bg-yellow-50 disabled:opacity-50 disabled:hover:bg-slate-50 disabled:hover:border-slate-200 disabled:hover:text-slate-700 rounded-xl text-xl font-bold text-slate-700 hover:text-yellow-700 transition border-2 border-slate-200 hover:border-yellow-400 text-center shadow-sm"
+                                                                    onClick={() => handlePayment(m.id, true)}
+                                                                    className={`w-full p-3 rounded-xl text-lg font-bold transition shadow-sm border-b-4 border-black/20 active:border-b-0 active:translate-y-1 ${m.bg}`}
                                                                 >
-                                                                    {m}
+                                                                    {m.id}
                                                                 </button>
                                                             ))}
                                                         </div>
