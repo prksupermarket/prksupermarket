@@ -180,6 +180,14 @@ export default function Home() {
         }
     }, [step]);
 
+    const formatAmount = (num: number) => {
+        const str = Math.floor(num).toString();
+        if (str.length > 6) {
+            return str.slice(0, 6) + '..';
+        }
+        return str;
+    };
+
     const reset = () => {
         setStep("LOOKUP");
         setSupplier("");
@@ -280,15 +288,16 @@ export default function Home() {
                         {supplier && invoiceId && selectedInvoice && !errorMessage.includes('❌') && (
                             <div className="p-6 rounded-3xl mt-4 border-2 animate-in fade-in zoom-in-95 duration-300 bg-blue-50 border-blue-200">
                                 <div className="space-y-4">
-                                    <div className={`grid gap-4 border-b border-slate-200 pb-4 ${selectedInvoice.remaining > 0 ? "grid-cols-2" : "grid-cols-1"}`}>
-                                        <div className="flex flex-col gap-1 pr-4">
-                                            <p className="text-[13px] font-bold text-slate-500 uppercase tracking-widest">Total</p>
-                                            <p className="text-2xl text-slate-700 font-black break-words">₹{selectedInvoice.totalAmount.toLocaleString('en-IN')}</p>
-                                        </div>
+                                    <div className="flex items-center flex-nowrap justify-between gap-x-1 sm:gap-x-2 border-b border-slate-200 pb-3 overflow-hidden w-full">
+                                        <p className="text-[15px] sm:text-base text-slate-700 font-black whitespace-nowrap tracking-tight shrink-0">
+                                            Total: ₹{formatAmount(selectedInvoice.totalAmount)}
+                                        </p>
                                         {selectedInvoice.remaining > 0 && (
-                                            <div className="flex flex-col gap-1 border-l-2 border-slate-200 pl-4">
-                                                <p className="text-[13px] font-bold text-blue-500 uppercase tracking-widest">Balance</p>
-                                                <p className="text-2xl text-blue-700 font-black break-words">₹{selectedInvoice.remaining.toLocaleString('en-IN')}</p>
+                                            <div className="flex items-center gap-x-1 sm:gap-x-2 shrink-0 overflow-hidden">
+                                                <span className="text-slate-300 text-[15px] sm:text-base font-light leading-none shrink-0">|</span>
+                                                <p className="text-[15px] sm:text-base text-blue-700 font-black whitespace-nowrap tracking-tight">
+                                                    Balance: ₹{formatAmount(selectedInvoice.remaining)}
+                                                </p>
                                             </div>
                                         )}
                                     </div>
