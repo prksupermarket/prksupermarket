@@ -77,7 +77,7 @@ export async function GET() {
         });
 
         return NextResponse.json({
-            suppliers: Array.from(suppliers).sort(),
+            suppliers: Array.from(suppliers),
             invoices
         });
 

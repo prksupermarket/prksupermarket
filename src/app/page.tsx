@@ -223,7 +223,7 @@ export default function Home() {
                 <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-200">
                     <div className="space-y-8">
                         <div className="space-y-3">
-                            <label htmlFor="supplier" className="block text-2xl font-bold text-slate-700">Provider Name</label>
+                            <label htmlFor="supplier" className="block text-2xl font-bold text-slate-700">Supplier Name</label>
                             <select
                                 id="supplier"
                                 value={supplier}
@@ -282,7 +282,9 @@ export default function Home() {
                                 <div className="space-y-4">
                                     <div className="flex justify-between items-end border-b border-slate-200 pb-2">
                                         <p className="text-lg text-slate-600 font-medium">Total: ₹{selectedInvoice.totalAmount.toLocaleString('en-IN')}</p>
-                                        <p className="text-2xl text-blue-700 font-black">Balance: ₹{selectedInvoice.remaining.toLocaleString('en-IN')}</p>
+                                        {selectedInvoice.remaining > 0 && (
+                                            <p className="text-2xl text-blue-700 font-black">Balance: ₹{selectedInvoice.remaining.toLocaleString('en-IN')}</p>
+                                        )}
                                     </div>
 
                                     {selectedInvoice.history && selectedInvoice.history.length > 0 && (
