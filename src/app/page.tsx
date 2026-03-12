@@ -280,10 +280,13 @@ export default function Home() {
                         {supplier && invoiceId && selectedInvoice && !errorMessage.includes('❌') && (
                             <div className="p-6 rounded-3xl mt-4 border-2 animate-in fade-in zoom-in-95 duration-300 bg-blue-50 border-blue-200">
                                 <div className="space-y-4">
-                                    <div className="flex justify-between items-end border-b border-slate-200 pb-2">
-                                        <p className="text-lg text-slate-600 font-medium">Total: ₹{selectedInvoice.totalAmount.toLocaleString('en-IN')}</p>
+                                    <div className="flex items-center flex-wrap gap-x-4 gap-y-2 border-b border-slate-200 pb-3">
+                                        <p className="text-xl text-slate-700 font-black">Total: ₹{selectedInvoice.totalAmount.toLocaleString('en-IN')}</p>
                                         {selectedInvoice.remaining > 0 && (
-                                            <p className="text-2xl text-blue-700 font-black">Balance: ₹{selectedInvoice.remaining.toLocaleString('en-IN')}</p>
+                                            <>
+                                                <span className="text-slate-300 text-xl font-light leading-none hidden sm:inline">|</span>
+                                                <p className="text-xl text-blue-700 font-black">Balance: ₹{selectedInvoice.remaining.toLocaleString('en-IN')}</p>
+                                            </>
                                         )}
                                     </div>
 
