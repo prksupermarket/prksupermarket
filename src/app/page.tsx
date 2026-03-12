@@ -283,12 +283,12 @@ export default function Home() {
                                     <div className={`grid gap-4 border-b border-slate-200 pb-4 ${selectedInvoice.remaining > 0 ? "grid-cols-2" : "grid-cols-1"}`}>
                                         <div className="flex flex-col gap-1 pr-4">
                                             <p className="text-[13px] font-bold text-slate-500 uppercase tracking-widest">Total</p>
-                                            <p className="text-2xl text-slate-700 font-black truncate">₹{selectedInvoice.totalAmount.toLocaleString('en-IN')}</p>
+                                            <p className="text-2xl text-slate-700 font-black break-words">₹{selectedInvoice.totalAmount.toLocaleString('en-IN')}</p>
                                         </div>
                                         {selectedInvoice.remaining > 0 && (
                                             <div className="flex flex-col gap-1 border-l-2 border-slate-200 pl-4">
                                                 <p className="text-[13px] font-bold text-blue-500 uppercase tracking-widest">Balance</p>
-                                                <p className="text-2xl text-blue-700 font-black truncate">₹{selectedInvoice.remaining.toLocaleString('en-IN')}</p>
+                                                <p className="text-2xl text-blue-700 font-black break-words">₹{selectedInvoice.remaining.toLocaleString('en-IN')}</p>
                                             </div>
                                         )}
                                     </div>
