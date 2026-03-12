@@ -305,59 +305,59 @@ export default function Home() {
 
                                     {/* Inline Payment Controls - Highlighted */}
                                     <div className="pt-6 mt-4 border-t-2 border-slate-200 space-y-4 bg-slate-50/50 -mx-6 px-6 pb-6 rounded-b-[24px]">
-                                        <div className="grid grid-cols-2 gap-4 items-start">
-                                            {/* FULL PAYMENT COLUMN */}
-                                            <div className="flex flex-col">
-                                                <button
-                                                    onClick={() => { setActiveAction(activeAction === "FULL" ? null : "FULL"); setErrorMessage(""); }}
-                                                    disabled={isLoading}
-                                                    className={`hover:bg-green-700 text-white py-5 px-4 text-2xl font-black shadow-lg active:scale-95 disabled:opacity-50 transition-all flex items-center justify-center gap-2 z-10 relative ${activeAction === "FULL" ? "bg-green-700 rounded-t-2xl" : "bg-green-600 rounded-2xl"}`}
-                                                >
-                                                    Pay Full
-                                                </button>
+                                        <div className="grid grid-cols-2 gap-3 sm:gap-4 items-start">
+                                            {/* FULL BUTTON */}
+                                            <button
+                                                onClick={() => { setActiveAction(activeAction === "FULL" ? null : "FULL"); setErrorMessage(""); }}
+                                                disabled={isLoading}
+                                                className={`hover:bg-green-700 text-white py-4 sm:py-5 px-2 sm:px-4 text-xl sm:text-2xl font-black shadow-lg active:scale-95 disabled:opacity-50 transition-all flex items-center justify-center whitespace-nowrap z-10 relative ${activeAction === "FULL" ? "bg-green-700 rounded-2xl ring-4 ring-green-300 shadow-green-500/50 scale-105" : "bg-green-600 rounded-2xl"}`}
+                                            >
+                                                Pay Full
+                                            </button>
 
-                                                {activeAction === "FULL" && (
-                                                    <div className="p-3 bg-white border-x-2 border-b-2 border-green-700 rounded-b-2xl space-y-2 animate-in slide-in-from-top-2 shadow-xl -mt-1 pt-4">
-                                                        {[{ id: 'PhonePe', bg: 'bg-[#5f259f] hover:bg-[#4a1c7d] text-white' },
-                                                        { id: 'Bank Transfer', bg: 'bg-blue-600 hover:bg-blue-700 text-white' },
-                                                        { id: 'Cash Payment', bg: 'bg-emerald-600 hover:bg-emerald-700 text-white' }].map(m => (
-                                                            <button
-                                                                key={m.id}
-                                                                onClick={() => handlePayment(m.id, false)}
-                                                                disabled={isLoading}
-                                                                className={`w-full p-3 rounded-xl text-lg font-bold transition shadow-sm border-b-4 border-black/20 active:border-b-0 active:translate-y-1 ${m.bg}`}
-                                                            >
-                                                                {m.id}
-                                                            </button>
-                                                        ))}
-                                                    </div>
-                                                )}
-                                            </div>
-
-                                            {/* PARTIAL PAYMENT COLUMN */}
-                                            <div className="flex flex-col">
-                                                <button
-                                                    onClick={() => { setActiveAction(activeAction === "PARTIAL" ? null : "PARTIAL"); setErrorMessage(""); }}
-                                                    disabled={isLoading}
-                                                    className={`hover:bg-yellow-600 text-white py-5 px-4 text-2xl font-black shadow-lg active:scale-95 disabled:opacity-50 transition-all flex items-center justify-center gap-2 z-10 relative ${activeAction === "PARTIAL" ? "bg-yellow-600 rounded-2xl ring-4 ring-yellow-300 shadow-yellow-500/50 scale-105" : "bg-yellow-500 rounded-2xl"}`}
-                                                >
-                                                    Partial
-                                                </button>
-                                            </div>
+                                            {/* PARTIAL BUTTON */}
+                                            <button
+                                                onClick={() => { setActiveAction(activeAction === "PARTIAL" ? null : "PARTIAL"); setErrorMessage(""); }}
+                                                disabled={isLoading}
+                                                className={`hover:bg-yellow-600 text-white py-4 sm:py-5 px-2 sm:px-4 text-xl sm:text-2xl font-black shadow-lg active:scale-95 disabled:opacity-50 transition-all flex items-center justify-center whitespace-nowrap z-10 relative ${activeAction === "PARTIAL" ? "bg-yellow-600 rounded-2xl ring-4 ring-yellow-300 shadow-yellow-500/50 scale-105" : "bg-yellow-500 rounded-2xl"}`}
+                                            >
+                                                Partial
+                                            </button>
                                         </div>
+
+                                        {/* FULL WIDTH PAY FULL AREA */}
+                                        {activeAction === "FULL" && (
+                                            <div className="p-4 sm:p-5 bg-white border-4 border-green-600 rounded-3xl space-y-4 animate-in fade-in slide-in-from-top-4 shadow-2xl mt-6">
+                                                <p className="text-xs font-black text-slate-400 text-center uppercase tracking-widest pb-1">Select Mode</p>
+                                                <div className="grid gap-3">
+                                                    {[{ id: 'PhonePe', bg: 'bg-[#5f259f] hover:bg-[#4a1c7d] text-white' },
+                                                    { id: 'Bank Transfer', bg: 'bg-blue-600 hover:bg-blue-700 text-white' },
+                                                    { id: 'Cash Payment', bg: 'bg-emerald-600 hover:bg-emerald-700 text-white' }].map(m => (
+                                                        <button
+                                                            key={m.id}
+                                                            onClick={() => handlePayment(m.id, false)}
+                                                            disabled={isLoading}
+                                                            className={`w-full p-4 rounded-2xl text-xl font-bold transition shadow-sm border-b-4 border-black/20 active:border-b-0 active:translate-y-1 ${m.bg}`}
+                                                        >
+                                                            {m.id}
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
 
                                         {/* FULL WIDTH PARTIAL AREA */}
                                         {activeAction === "PARTIAL" && (
-                                            <div className="p-5 bg-white border-4 border-yellow-500 rounded-3xl space-y-5 animate-in fade-in slide-in-from-top-4 shadow-2xl mt-6">
-                                                <div className="bg-slate-50 border-2 border-slate-200 rounded-2xl shadow-inner">
+                                            <div className="p-4 sm:p-5 bg-white border-4 border-yellow-500 rounded-3xl space-y-5 animate-in fade-in slide-in-from-top-4 shadow-2xl mt-6">
+                                                <div className="bg-slate-50 border-2 border-slate-200 rounded-2xl shadow-inner w-full">
                                                     <div className="relative">
-                                                        <IndianRupee className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-500" size={32} />
+                                                        <IndianRupee className="absolute left-4 sm:left-6 top-1/2 -translate-y-1/2 text-slate-500" size={24} />
                                                         <input
                                                             type="number"
                                                             value={partialAmount}
                                                             onChange={(e) => setPartialAmount(e.target.value)}
                                                             placeholder="Amount"
-                                                            className="w-full py-6 pl-16 pr-4 text-4xl font-black bg-transparent outline-none text-slate-800 placeholder:text-slate-300 transition-all tracking-tight"
+                                                            className="w-full py-4 sm:py-6 pl-12 sm:pl-16 pr-4 text-2xl font-black bg-transparent outline-none text-slate-800 placeholder:text-slate-300 transition-all tracking-tight"
                                                         />
                                                     </div>
                                                 </div>
