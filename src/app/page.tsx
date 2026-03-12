@@ -331,60 +331,65 @@ export default function Home() {
                                                 <button
                                                     onClick={() => { setActiveAction(activeAction === "PARTIAL" ? null : "PARTIAL"); setErrorMessage(""); }}
                                                     disabled={isLoading}
-                                                    className={`hover:bg-yellow-600 text-white py-5 px-4 text-2xl font-black shadow-lg active:scale-95 disabled:opacity-50 transition-all flex items-center justify-center gap-2 z-10 relative ${activeAction === "PARTIAL" ? "bg-yellow-600 rounded-t-2xl" : "bg-yellow-500 rounded-2xl"}`}
+                                                    className={`hover:bg-yellow-600 text-white py-5 px-4 text-2xl font-black shadow-lg active:scale-95 disabled:opacity-50 transition-all flex items-center justify-center gap-2 z-10 relative ${activeAction === "PARTIAL" ? "bg-yellow-600 rounded-2xl ring-4 ring-yellow-300 shadow-yellow-500/50 scale-105" : "bg-yellow-500 rounded-2xl"}`}
                                                 >
                                                     Partial
                                                 </button>
+                                            </div>
+                                        </div>
 
-                                                {activeAction === "PARTIAL" && (
-                                                    <div className="p-4 bg-white border-x-2 border-b-2 border-yellow-600 rounded-b-2xl space-y-4 animate-in slide-in-from-top-2 shadow-xl -mt-1 pt-5">
-                                                        <div className="p-2 bg-slate-50 border-2 border-slate-200 rounded-2xl">
-                                                            <div className="relative">
-                                                                <IndianRupee className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" size={22} />
-                                                                <input
-                                                                    type="number"
-                                                                    value={partialAmount}
-                                                                    onChange={(e) => setPartialAmount(e.target.value)}
-                                                                    placeholder="Enter Amount"
-                                                                    className="w-full py-4 pl-12 pr-4 text-2xl font-black bg-white border-2 border-slate-300 rounded-xl outline-none focus:border-yellow-500 focus:ring-4 focus:ring-yellow-100 transition-all shadow-inner"
-                                                                />
+                                        {/* FULL WIDTH PARTIAL AREA */}
+                                        {activeAction === "PARTIAL" && (
+                                            <div className="p-5 bg-white border-4 border-yellow-500 rounded-3xl space-y-5 animate-in fade-in slide-in-from-top-4 shadow-2xl mt-6">
+                                                <div className="bg-slate-50 border-2 border-slate-200 rounded-2xl shadow-inner">
+                                                    <div className="relative">
+                                                        <IndianRupee className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-500" size={32} />
+                                                        <input
+                                                            type="number"
+                                                            value={partialAmount}
+                                                            onChange={(e) => setPartialAmount(e.target.value)}
+                                                            placeholder="Amount"
+                                                            className="w-full py-6 pl-16 pr-4 text-4xl font-black bg-transparent outline-none text-slate-800 placeholder:text-slate-300 transition-all tracking-tight"
+                                                        />
+                                                    </div>
+                                                </div>
+
+                                                {partialAmount && Number(partialAmount) > selectedInvoice.remaining && (
+                                                    <div className="p-4 bg-red-50 border-2 border-red-200 rounded-2xl animate-in fade-in slide-in-from-top-1">
+                                                        <p className="text-base font-bold text-red-600 text-center">
+                                                            Amount exceeds balance (₹{selectedInvoice.remaining.toLocaleString('en-IN')})
+                                                        </p>
+                                                    </div>
+                                                )}
+
+                                                {partialAmount && Number(partialAmount) > 0 && Number(partialAmount) <= selectedInvoice.remaining && (
+                                                    <div className="space-y-4 pt-4 border-t-2 border-slate-100 animate-in fade-in slide-in-from-top-2 duration-300">
+                                                        {Number(partialAmount) >= 100000 && (
+                                                            <div className="text-center pb-2">
+                                                                <span className="text-base font-black text-yellow-800 bg-yellow-100 px-5 py-2.5 rounded-full shadow-sm">
+                                                                    Paying - {parseFloat((Number(partialAmount) / 100000).toFixed(2))} Lakh Rupees
+                                                                </span>
                                                             </div>
+                                                        )}
+                                                        <p className="text-xs font-black text-slate-400 text-center uppercase tracking-widest pb-1">Select Mode to Pay</p>
+                                                        <div className="grid gap-3">
+                                                            {[{ id: 'PhonePe', bg: 'bg-[#5f259f] hover:bg-[#4a1c7d] text-white' },
+                                                            { id: 'Bank Transfer', bg: 'bg-blue-600 hover:bg-blue-700 text-white' },
+                                                            { id: 'Cash Payment', bg: 'bg-emerald-600 hover:bg-emerald-700 text-white' }].map(m => (
+                                                                <button
+                                                                    key={m.id}
+                                                                    disabled={isLoading}
+                                                                    onClick={() => handlePayment(m.id, true)}
+                                                                    className={`w-full p-4 rounded-2xl text-xl font-bold transition shadow-sm border-b-4 border-black/20 active:border-b-0 active:translate-y-1 ${m.bg}`}
+                                                                >
+                                                                    {m.id}
+                                                                </button>
+                                                            ))}
                                                         </div>
-
-                                                        {partialAmount && Number(partialAmount) > selectedInvoice.remaining && (
-                                                            <p className="text-sm font-bold text-red-500 text-center animate-in slide-in-from-top-1">
-                                                                Amount exceeds balance (₹{selectedInvoice.remaining.toLocaleString('en-IN')})
-                                                            </p>
-                                                        )}
-
-                                                        {partialAmount && Number(partialAmount) > 0 && Number(partialAmount) <= selectedInvoice.remaining && (
-                                                            <div className="space-y-3 pt-3 border-t-2 border-slate-100 animate-in fade-in slide-in-from-top-2 duration-300">
-                                                                {Number(partialAmount) >= 100000 && (
-                                                                    <div className="text-center pb-1">
-                                                                        <span className="text-sm font-black text-yellow-800 bg-yellow-100 px-4 py-1.5 rounded-full shadow-sm">
-                                                                            Paying - {parseFloat((Number(partialAmount) / 100000).toFixed(2))} Lakh Rupees
-                                                                        </span>
-                                                                    </div>
-                                                                )}
-                                                                <p className="text-[11px] font-black text-slate-400 text-center uppercase tracking-widest pb-1">Select Mode to Pay</p>
-                                                                {[{ id: 'PhonePe', bg: 'bg-[#5f259f] hover:bg-[#4a1c7d] text-white' },
-                                                                { id: 'Bank Transfer', bg: 'bg-blue-600 hover:bg-blue-700 text-white' },
-                                                                { id: 'Cash Payment', bg: 'bg-emerald-600 hover:bg-emerald-700 text-white' }].map(m => (
-                                                                    <button
-                                                                        key={m.id}
-                                                                        disabled={isLoading}
-                                                                        onClick={() => handlePayment(m.id, true)}
-                                                                        className={`w-full p-4 rounded-xl text-xl font-bold transition shadow-sm border-b-4 border-black/20 active:border-b-0 active:translate-y-1 ${m.bg}`}
-                                                                    >
-                                                                        {m.id}
-                                                                    </button>
-                                                                ))}
-                                                            </div>
-                                                        )}
                                                     </div>
                                                 )}
                                             </div>
-                                        </div>
+                                        )}
                                     </div>
                                 </div>
                             </div>
