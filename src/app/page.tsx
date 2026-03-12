@@ -280,13 +280,16 @@ export default function Home() {
                         {supplier && invoiceId && selectedInvoice && !errorMessage.includes('❌') && (
                             <div className="p-6 rounded-3xl mt-4 border-2 animate-in fade-in zoom-in-95 duration-300 bg-blue-50 border-blue-200">
                                 <div className="space-y-4">
-                                    <div className="flex items-center flex-nowrap gap-x-2 sm:gap-x-4 border-b border-slate-200 pb-3 overflow-hidden">
-                                        <p className="text-base sm:text-lg text-slate-700 font-black whitespace-nowrap">Total: ₹{selectedInvoice.totalAmount.toLocaleString('en-IN')}</p>
+                                    <div className={`grid gap-4 border-b border-slate-200 pb-4 ${selectedInvoice.remaining > 0 ? "grid-cols-2" : "grid-cols-1"}`}>
+                                        <div className="flex flex-col gap-1 pr-4">
+                                            <p className="text-[13px] font-bold text-slate-500 uppercase tracking-widest">Total</p>
+                                            <p className="text-2xl text-slate-700 font-black truncate">₹{selectedInvoice.totalAmount.toLocaleString('en-IN')}</p>
+                                        </div>
                                         {selectedInvoice.remaining > 0 && (
-                                            <>
-                                                <span className="text-slate-300 text-base sm:text-lg font-light leading-none">|</span>
-                                                <p className="text-base sm:text-lg text-blue-700 font-black whitespace-nowrap truncate text-ellipsis">Balance: ₹{selectedInvoice.remaining.toLocaleString('en-IN')}</p>
-                                            </>
+                                            <div className="flex flex-col gap-1 border-l-2 border-slate-200 pl-4">
+                                                <p className="text-[13px] font-bold text-blue-500 uppercase tracking-widest">Balance</p>
+                                                <p className="text-2xl text-blue-700 font-black truncate">₹{selectedInvoice.remaining.toLocaleString('en-IN')}</p>
+                                            </div>
                                         )}
                                     </div>
 
