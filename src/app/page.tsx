@@ -206,7 +206,7 @@ export default function Home() {
     if (isInitializing) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[50vh] space-y-4">
-                <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600"></div>
+                <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-emerald-600"></div>
                 <p className="text-xl font-bold text-slate-600 animate-pulse">Loading Google Sheet...</p>
             </div>
         );
@@ -241,7 +241,7 @@ export default function Home() {
                                     setSelectedRowIndex(null);
                                     setErrorMessage("");
                                 }}
-                                className="w-full p-5 text-2xl bg-slate-50 border-2 border-slate-300 rounded-2xl focus:border-blue-500 focus:ring-4 focus:ring-blue-200 transition-all appearance-none font-bold"
+                                className="w-full p-5 text-2xl bg-white border-2 border-slate-300 rounded-2xl focus:border-emerald-500 focus:ring-4 focus:ring-emerald-200 transition-all appearance-none font-bold"
                                 style={{ minHeight: "80px" }}
                             >
                                 <option value="" disabled>Select Supplier...</option>
@@ -256,11 +256,11 @@ export default function Home() {
                                     id="invoice"
                                     value={selectedRowIndex || ""}
                                     onChange={(e) => handleInvoiceSelect(Number(e.target.value))}
-                                    className={`w-full p-5 text-2xl bg-slate-50 border-2 rounded-2xl focus:ring-4 focus:ring-blue-100 transition-all appearance-none font-bold ${(() => {
+                                    className={`w-full p-5 text-2xl bg-white border-2 rounded-2xl focus:ring-4 focus:ring-emerald-100 transition-all appearance-none font-bold ${(() => {
                                         const cur = selectedInvoice;
-                                        if (!cur) return 'border-blue-500 text-blue-800';
+                                        if (!cur) return 'border-emerald-500 text-emerald-800';
                                         const first = getFirstOccurrence(cur.id);
-                                        return first && cur.rowIndex > first.invoice.rowIndex ? 'border-red-400 text-red-700 bg-red-50' : 'border-blue-500 text-blue-800';
+                                        return first && cur.rowIndex > first.invoice.rowIndex ? 'border-red-400 text-red-700 bg-red-50' : 'border-emerald-500 text-emerald-800';
                                     })()}`}
                                     style={{ minHeight: "80px" }}
                                 >
@@ -286,7 +286,7 @@ export default function Home() {
                         )}
 
                         {supplier && invoiceId && selectedInvoice && !errorMessage.includes('❌') && (
-                            <div className="p-6 rounded-3xl mt-4 border-2 animate-in fade-in zoom-in-95 duration-300 bg-blue-50 border-blue-200">
+                            <div className="p-6 rounded-3xl mt-4 border-2 animate-in fade-in zoom-in-95 duration-300 bg-emerald-50/50 border-emerald-200">
                                 <div className="space-y-4">
                                     <div className={`grid gap-2 border-b border-slate-200 pb-4 ${selectedInvoice.remaining > 0 ? "grid-cols-2" : "grid-cols-1"}`}>
                                         <div className="flex flex-col gap-1 pr-2 overflow-hidden">
@@ -295,8 +295,8 @@ export default function Home() {
                                         </div>
                                         {selectedInvoice.remaining > 0 && (
                                             <div className="flex flex-col gap-1 border-l-2 border-slate-200 pl-3 overflow-hidden">
-                                                <p className="text-[12px] font-bold text-blue-500 uppercase tracking-widest">Balance</p>
-                                                <p className="text-[18px] sm:text-xl text-blue-700 font-black whitespace-nowrap tracking-tight">₹{formatAmount(selectedInvoice.remaining)}</p>
+                                                <p className="text-[12px] font-bold text-emerald-600 uppercase tracking-widest">Balance</p>
+                                                <p className="text-[18px] sm:text-xl text-emerald-700 font-black whitespace-nowrap tracking-tight">₹{formatAmount(selectedInvoice.remaining)}</p>
                                             </div>
                                         )}
                                     </div>
@@ -318,7 +318,7 @@ export default function Home() {
                                             <button
                                                 onClick={() => { setActiveAction(activeAction === "FULL" ? null : "FULL"); setErrorMessage(""); }}
                                                 disabled={isLoading}
-                                                className={`hover:bg-green-700 text-white py-4 sm:py-5 px-2 sm:px-4 text-xl sm:text-2xl font-black shadow-lg active:scale-95 disabled:opacity-50 transition-all flex items-center justify-center whitespace-nowrap z-10 relative ${activeAction === "FULL" ? "bg-green-700 rounded-2xl ring-4 ring-green-300 shadow-green-500/50 scale-105" : "bg-green-600 rounded-2xl"}`}
+                                                className={`hover:bg-emerald-700 text-white py-4 sm:py-5 px-2 sm:px-4 text-xl sm:text-2xl font-black shadow-lg active:scale-95 disabled:opacity-50 transition-all flex items-center justify-center whitespace-nowrap z-10 relative ${activeAction === "FULL" ? "bg-emerald-700 rounded-2xl ring-4 ring-emerald-300 shadow-emerald-500/50 scale-105" : "bg-emerald-600 rounded-2xl"}`}
                                             >
                                                 Pay Full
                                             </button>
@@ -335,12 +335,12 @@ export default function Home() {
 
                                         {/* FULL WIDTH PAY FULL AREA */}
                                         {activeAction === "FULL" && (
-                                            <div className="p-4 sm:p-5 bg-white border-4 border-green-600 rounded-3xl space-y-4 animate-in fade-in slide-in-from-top-4 shadow-2xl mt-6">
+                                            <div className="p-4 sm:p-5 bg-white border-4 border-emerald-600 rounded-3xl space-y-4 animate-in fade-in slide-in-from-top-4 shadow-2xl mt-6">
                                                 <p className="text-xs font-black text-slate-400 text-center uppercase tracking-widest pb-1">Select Mode</p>
                                                 <div className="grid gap-3">
                                                     {[{ id: 'PhonePe', bg: 'bg-[#5f259f] hover:bg-[#4a1c7d] text-white' },
                                                     { id: 'Bank Transfer', bg: 'bg-blue-600 hover:bg-blue-700 text-white' },
-                                                    { id: 'Cash Payment', bg: 'bg-emerald-600 hover:bg-emerald-700 text-white' }].map(m => (
+                                                    { id: 'Cash Payment', bg: 'bg-teal-600 hover:bg-teal-700 text-white' }].map(m => (
                                                         <button
                                                             key={m.id}
                                                             onClick={() => handlePayment(m.id, false)}
@@ -417,7 +417,7 @@ export default function Home() {
 
             {/* STEP 3: SUCCESS */}
             {step === "SUCCESS" && (
-                <div className="bg-green-500 p-8 rounded-3xl shadow-xl border-4 border-green-600 animate-in zoom-in duration-500 text-center text-white flex flex-col items-center justify-center space-y-8 min-h-[60vh]">
+                <div className="bg-emerald-500 p-8 rounded-3xl shadow-xl border-4 border-emerald-600 animate-in zoom-in duration-500 text-center text-white flex flex-col items-center justify-center space-y-8 min-h-[60vh]">
                     <CheckCircle2 size={120} className="text-white animate-bounce" />
                     <h2 className="text-5xl font-black mb-4">Success!</h2>
                     <p className="text-3xl font-medium">
@@ -428,9 +428,9 @@ export default function Home() {
                             Paid via {paymentMode}
                         </p>
                     )}
-                    <div className="bg-green-600 rounded-2xl p-6 w-full text-left space-y-2 mt-8">
+                    <div className="bg-emerald-600 rounded-2xl p-6 w-full text-left space-y-2 mt-8">
                         {currentTime && (
-                            <div className="border-b border-green-500 pb-4 mb-4">
+                            <div className="border-b border-emerald-500 pb-4 mb-4">
                                 <p className="text-xl opacity-90">Payment Date & Time:</p>
                                 <p className="text-3xl font-black">
                                     {currentTime.toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
@@ -449,17 +449,17 @@ export default function Home() {
                                 <p className="text-xl mb-4">New Remaining Balance: <strong>₹{(selectedInvoice.remaining - Number(partialAmount)).toLocaleString('en-IN')}</strong></p>
 
                                 {selectedInvoice.history && selectedInvoice.history.length > 0 && (
-                                    <div className="mt-4 border-t border-green-500 pt-4">
+                                    <div className="mt-4 border-t border-emerald-500 pt-4">
                                         <p className="text-lg font-bold mb-2">Previous Payments History:</p>
                                         {selectedInvoice.history.map((h, i) => (
-                                            <p key={i} className="text-lg text-green-100 mb-1">Paid ₹{h.amount.toLocaleString('en-IN')} on {h.date} {h.paymentMode ? `(via ${h.paymentMode})` : ''}</p>
+                                            <p key={i} className="text-lg text-emerald-100 mb-1">Paid ₹{h.amount.toLocaleString('en-IN')} on {h.date} {h.paymentMode ? `(via ${h.paymentMode})` : ''}</p>
                                         ))}
                                     </div>
                                 )}
                             </>
                         )}
                     </div>
-                    <button onClick={reset} className="w-full bg-white text-green-700 hover:bg-green-50 p-6 rounded-2xl text-3xl font-bold shadow-lg active:scale-95 mt-12" style={{ minHeight: "100px" }}>
+                    <button onClick={reset} className="w-full bg-white text-emerald-700 hover:bg-emerald-50 p-6 rounded-2xl text-3xl font-bold shadow-lg active:scale-95 mt-12" style={{ minHeight: "100px" }}>
                         Make Another Payment
                     </button>
                 </div>

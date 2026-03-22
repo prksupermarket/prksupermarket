@@ -25,10 +25,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-slate-50 text-slate-900 min-h-screen pb-16`}>
-        <header className="bg-slate-900 text-white p-6 shadow-md mb-6">
-          <h1 className="text-3xl font-bold text-center tracking-tight">R K Supermarket</h1>
-          <p className="text-center text-slate-300 mt-2 text-xl font-medium">Supplier Payments</p>
+      <body className={`${inter.className} bg-white text-slate-900 min-h-screen pb-16`}>
+        <header className="bg-gradient-to-r from-emerald-900 to-green-800 text-white p-6 shadow-md mb-6 border-b-4 border-emerald-500">
+          <h1 className="text-3xl font-bold text-center tracking-tight drop-shadow-sm">R K Supermarket</h1>
+          <p className="text-center text-emerald-100 mt-2 text-xl font-medium">Supplier Payments</p>
         </header>
         <main className="max-w-md mx-auto px-4">
           {children}
